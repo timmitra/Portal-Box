@@ -13,6 +13,7 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 
+@MainActor
 struct ImmersiveView: View {
     
     @State private var box = Entity()
@@ -28,10 +29,28 @@ struct ImmersiveView: View {
                     return
                 }
                 self.box = box
-              // box.position = [0, 1, -1.5] // meters
+               //box.position = [0, 1, -2] // meters
                 box.scale = [1, 2, 1]
+                
+                // make world
+                let world1 = Entity()
+                world1.components.set(WorldComponent())
+                let skybox1 = await createSkyboxEntity(texture: "skybox1")
+                content.add(skybox1)
             }
         }
+    }
+    
+    func createSkyboxEntity(texture: String) async -> Entity {
+        guard let resource = try? await TextureResource(named: texture) else {
+            fatalError("unable to make skybox")
+        }
+        var material = UnlitMaterial()
+        material.color = .init(texture: .init(resource))
+        let entity = Entity()
+        entity.components.set(ModelComponent(mesh: .generateSphere(radius: 1000), materials: [material]))
+        entity.scale *= .init(x: -1, y:1, z:1)
+        return entity
     }
 }
 
