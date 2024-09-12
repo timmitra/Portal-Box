@@ -13,6 +13,9 @@ def Xform "Root" (
     )
     {
         reorder nameChildren = ["AnchorPortal1", "AnchorPortal2", "AnchorPortal3", "AnchorPortal4", "Cube", "Cube_1", "Cube_2", "Cube_3", "Base", "Top"]
+        float3 xformOp:translate = (0, 100, -150)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
         def Cube "Cube" (
             active = true
             prepend apiSchemas = ["MaterialBindingAPI"]

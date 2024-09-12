@@ -14,15 +14,22 @@ import RealityKit
 import RealityKitContent
 
 struct ImmersiveView: View {
+    
+    @State private var box = Entity()
 
     var body: some View {
         RealityView { content in
             // Add the initial RealityKit content
-            if let immersiveContentEntity = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
-                content.add(immersiveContentEntity)
+            if let portalBoxScene = try? await Entity(named: "PortalBoxScene", in: realityKitContentBundle) {
+                
+                content.add(portalBoxScene)
 
-                // Put skybox here.  See example in World project available at
-                // https://developer.apple.com/
+                guard let box = portalBoxScene.findEntity(named: "Box") else {
+                    return
+                }
+                self.box = box
+              // box.position = [0, 1, -1.5] // meters
+                box.scale = [1, 2, 1]
             }
         }
     }
