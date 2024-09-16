@@ -29,8 +29,8 @@ struct ImmersiveView: View {
                     return
                 }
                 self.box = box
-               //box.position = [0, 1, -2] // meters
-                box.scale = [1, 2, 1]
+              // box.position = [0, 1, -2] // meters
+                box.scale = [1, 1, 1]
                 
                 // make 4 worlds
                 let world1 = Entity()
@@ -40,13 +40,13 @@ struct ImmersiveView: View {
                 content.add(world1)
                 
                 let world2 = Entity()
-                world1.components.set(WorldComponent())
+                world2.components.set(WorldComponent())
                 let skybox2 = await createSkyboxEntity(texture: "skybox2")
                 world2.addChild(skybox2)
                 content.add(world2)
                 
                 let world3 = Entity()
-                world1.components.set(WorldComponent())
+                world3.components.set(WorldComponent())
                 let skybox3 = await createSkyboxEntity(texture: "skybox3")
                 world3.addChild(skybox3)
                 content.add(world3)
@@ -57,7 +57,8 @@ struct ImmersiveView: View {
                 world1.addChild(skybox4)
                 content.add(world4)
                 
-                // make 4 portal 1
+                /// make 4 portals
+                /// portal 1
                 let worldPortal1 = createPortal(target: world1)
                 content.add(worldPortal1)
                 
@@ -66,6 +67,40 @@ struct ImmersiveView: View {
                 }
                 anchorPortal1.addChild(worldPortal1)
                 worldPortal1.transform.rotation = simd_quatf(angle: .pi/2, axis: [1,0,0])
+
+                /// portal 2
+                let worldPortal2 = createPortal(target: world2)
+                content.add(worldPortal2)
+                
+                guard let anchorPortal2 = portalBoxScene.findEntity(named: "AnchorPortal2") else {
+                    fatalError("couldn't make anchorPortal2")
+                }
+                anchorPortal2.addChild(worldPortal2)
+                worldPortal2.transform.rotation = simd_quatf(angle: -.pi/2, axis: [1,0,0])
+
+                /// portal 3
+                let worldPortal3 = createPortal(target: world3)
+                content.add(worldPortal3)
+                
+                guard let anchorPortal3 = portalBoxScene.findEntity(named: "AnchorPortal3") else {
+                    fatalError("couldn't make anchorPortal3")
+                }
+                anchorPortal3.addChild(worldPortal3)
+                let portal3RotX = simd_quatf(angle: .pi/2, axis: [1,0,0])
+                let portal3RotY = simd_quatf(angle: -.pi/2, axis: [0,1,0])
+                worldPortal3.transform.rotation = portal3RotY * portal3RotX // order matters
+
+                /// portal 4
+                let worldPortal4 = createPortal(target: world4)
+                content.add(worldPortal4)
+                
+                guard let anchorPortal4 = portalBoxScene.findEntity(named: "AnchorPortal4") else {
+                    fatalError("couldn't make anchorPortal4")
+                }
+                anchorPortal4.addChild(worldPortal4)
+                let portal4RotX = simd_quatf(angle: .pi/2, axis: [1,0,0])
+                let portal4RotY = simd_quatf(angle: .pi/2, axis: [0,1,0])
+                worldPortal4.transform.rotation = portal4RotY * portal4RotX
                 
                  
             }
